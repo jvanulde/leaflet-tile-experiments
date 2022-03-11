@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Leaflet Example with Tiles</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet.vectorgrid@latest/dist/Leaflet.VectorGrid.bundled.js"></script>
+
+</head>
+
+<body>
+    
+    <div id="map" style="width:100%;height:500px;"></div>
+    
+    <script>
+
+        var map = L.map( 'map', { 
+                // crs: L.CRS.EPSG4326
+                maxZoom: 14
+            } ),
+            southWest = L.latLng( 48.30891568624434, -128.4312145637652 ),
+            northEast = L.latLng( 52.9384673469385, -117.8488971573044 ),
+            bounds = L.latLngBounds( southWest, northEast );
+
+        var tiles = L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors, Points &copy 2012 LINZ'
+        }).addTo( map );
+
+        map.on( 'zoom', function(e){
+            console.log( map.getZoom() );
+        });
+
+        // var vectorTileLayer = L.vectorGrid.protobuf( 'OpenDRR_dsra_acm7p0_georgiastraitfault_indicators_s/EPSG_4326/{z}/{x}/{-y}.pbf', {
+
+        // } ).addTo( map );     
+
+        var imageTileLayer = L.tileLayer( 'OpenDRR_dsra_acm7p0_georgiastraitfault_indicators_s/EPSG_900913/{z}/{x}/{y}.png', {
+            detectRetina: true,
+            bounds: bounds, // leaflet won't request tiles outside of bounds
+            transparency: 'true',
+            opacity: 0.7,
+            maxZoom: 15, // set to max zoom level of tile cache or use maxNativeZoom
+            // maxNativeZoom: 15 // Maximum zoom number the tiles source has available. If it is specified, the tiles on all zoom levels higher than maxNativeZoom will be loaded from maxNativeZoom level and auto-scaled.
+        } ).addTo( map );     
+
+        map.setView( [49.2576508,-123.2639868], 10 ); // Vancouver
+
+    </script>
+</body>
+
+</html>
