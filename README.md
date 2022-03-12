@@ -1,4 +1,4 @@
-# single-tile-wms-leaflet
-Sample Leaflet implementation using single tile WMS
+# mapbox-tile-leaflet
+Sample Leaflet implementation using mapbox tiles generated in GeoServer
 
-https://jvanulde.github.io/single-tile-wms-leaflet/
+https://jvanulde.github.io/mapbox-tile-leaflet/
