@@ -24,7 +24,7 @@
 
         var map = L.map( 'map', { 
                 // crs: L.CRS.EPSG4326
-                maxZoom: 14
+                maxZoom: 18
             } ),
             southWest = L.latLng( 48.30891568624434, -128.4312145637652 ),
             northEast = L.latLng( 52.9384673469385, -117.8488971573044 ),
@@ -34,22 +34,22 @@
             attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors, Points &copy 2012 LINZ'
         }).addTo( map );
 
-        map.on( 'zoom', function(e){
-            console.log( map.getZoom() );
-        });
+        // map.on( 'zoom', function(e){
+        //     console.log( map.getZoom() );
+        // });
 
-        // var vectorTileLayer = L.vectorGrid.protobuf( 'OpenDRR_dsra_acm7p0_georgiastraitfault_indicators_s/EPSG_4326/{z}/{x}/{-y}.pbf', {
-
-        // } ).addTo( map );     
-
-        var imageTileLayer = L.tileLayer( 'OpenDRR_dsra_acm7p0_georgiastraitfault_indicators_s/EPSG_900913/{z}/{x}/{y}.png', {
-            detectRetina: true,
-            bounds: bounds, // leaflet won't request tiles outside of bounds
-            transparency: 'true',
-            opacity: 0.7,
-            maxZoom: 15, // set to max zoom level of tile cache or use maxNativeZoom
-            // maxNativeZoom: 15 // Maximum zoom number the tiles source has available. If it is specified, the tiles on all zoom levels higher than maxNativeZoom will be loaded from maxNativeZoom level and auto-scaled.
+        var vectorTileLayer = L.vectorGrid.protobuf( 'OpenDRR_dsra_acm7p0_georgiastraitfault_indicators_s/EPSG_900913/{z}/{x}/{y}.pbf', {
+            rendererFactory: L.canvas.tile
         } ).addTo( map );     
+
+        // var imageTileLayer = L.tileLayer( 'OpenDRR_dsra_acm7p0_georgiastraitfault_indicators_s/EPSG_900913/{z}/{x}/{y}.png', {
+        //     detectRetina: true,
+        //     bounds: bounds, // leaflet won't request tiles outside of bounds
+        //     transparency: 'true',
+        //     opacity: 0.7,
+        //     maxZoom: 15, // set to max zoom level of tile cache or use maxNativeZoom
+        //     // maxNativeZoom: 15 // Maximum zoom number the tiles source has available. If it is specified, the tiles on all zoom levels higher than maxNativeZoom will be loaded from maxNativeZoom level and auto-scaled.
+        // } ).addTo( map );     
 
         map.setView( [49.2576508,-123.2639868], 10 ); // Vancouver
 
