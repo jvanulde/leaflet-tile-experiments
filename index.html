@@ -24,7 +24,7 @@
 
         var map = L.map( 'map', { 
                 // crs: L.CRS.EPSG4326
-                maxZoom: 18
+                maxZoom: 14
             } ),
             southWest = L.latLng( 48.30891568624434, -128.4312145637652 ),
             northEast = L.latLng( 52.9384673469385, -117.8488971573044 ),
@@ -38,18 +38,67 @@
         //     console.log( map.getZoom() );
         // });
 
-        var vectorTileLayer = L.vectorGrid.protobuf( 'OpenDRR_dsra_acm7p0_georgiastraitfault_indicators_s/EPSG_900913/{z}/{x}/{y}.pbf', {
-            rendererFactory: L.canvas.tile
-        } ).addTo( map );     
+        var vectorTileOptions = {
+            rendererFactory: L.canvas.tile,
+            interactive: true,
+            getFeatureId: function(feature) {
+              return feature.properties[ "Sauid" ];
+            },
+            vectorTileLayerStyles: {
+                // https://leaflet.github.io/Leaflet.VectorGrid/vectorgrid-api-docs.html#styling-vectorgrids
+                dsra_acm7p0_georgiastraitfault_indicators_s: function ( properties ) {
+                    var r = properties.sCt_Res90_b0,
+                        color = "#666666";
+                    
+                    if ( r < 10  ) { fillColor = "#fff176"; }
+                    else if ( r >= 10 && r < 50  ) { fillColor = "#ffba00"; }
+                    else if ( r >= 50 && r < 100 ) { fillColor = "#ff9000"; }
+                    else if ( r >= 100 && r < 300 ) { fillColor = "#ff6500"; }
+                    else if ( r > 299 ) { fillColor = "#ff3b00"; }
+                    
+                    return {
+                        weight: 0.1,
+                        color: color,
+                        fillColor: fillColor,
+                        fillOpacity: 0.6,
+                        fill: true
+                    }
+                }
+            }
+        };
 
-        // var imageTileLayer = L.tileLayer( 'OpenDRR_dsra_acm7p0_georgiastraitfault_indicators_s/EPSG_900913/{z}/{x}/{y}.png', {
-        //     detectRetina: true,
-        //     bounds: bounds, // leaflet won't request tiles outside of bounds
-        //     transparency: 'true',
-        //     opacity: 0.7,
-        //     maxZoom: 15, // set to max zoom level of tile cache or use maxNativeZoom
-        //     // maxNativeZoom: 15 // Maximum zoom number the tiles source has available. If it is specified, the tiles on all zoom levels higher than maxNativeZoom will be loaded from maxNativeZoom level and auto-scaled.
-        // } ).addTo( map );     
+        var id = 0;
+
+        var vectorTileLayer = L.vectorGrid.protobuf( 'OpenDRR_dsra_acm7p0_georgiastraitfault_indicators_s/EPSG_900913/{z}/{x}/{y}.pbf', vectorTileOptions ).addTo( map );
+
+        vectorTileLayer.on( 'click', function ( e ) {
+
+            // if we have a selected feature reset the style
+            if ( id != 0 ) {
+                vectorTileLayer.resetFeatureStyle( id );
+            }
+
+            // set the selected feature id
+            id = e.layer.properties['Sauid'];
+
+            // set the selected feature style
+            setTimeout( function () {
+                vectorTileLayer.setFeatureStyle( id, {
+                    fill: true,
+                    fillColor: 'blue',
+                    color: 'black',
+                    weight: 1,
+                    fillOpacity: 0.5
+                }, 100 );
+            });
+
+            // add a popup with desired property
+            L.popup().setContent( "<strong>Residents affected after 90 days: </strong>" + e.layer.properties.sCt_Res90_b0.toString() )
+                .setLatLng( e.latlng )
+                .openOn( map );
+            
+            L.DomEvent.stop( e );
+        });
 
         map.setView( [49.2576508,-123.2639868], 10 ); // Vancouver
 
