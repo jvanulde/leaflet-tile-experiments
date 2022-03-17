@@ -44,6 +44,7 @@
             getFeatureId: function(feature) {
               return feature.properties[ "Sauid" ];
             },
+            bounds: bounds,
             vectorTileLayerStyles: {
                 // https://leaflet.github.io/Leaflet.VectorGrid/vectorgrid-api-docs.html#styling-vectorgrids
                 dsra_acm7p0_georgiastraitfault_indicators_s: function ( properties ) {
@@ -69,7 +70,7 @@
 
         var id = 0;
 
-        var vectorTileLayer = L.vectorGrid.protobuf( 'OpenDRR_dsra_acm7p0_georgiastraitfault_indicators_s/EPSG_900913/{z}/{x}/{y}.pbf', vectorTileOptions ).addTo( map );
+        var vectorTileLayer = L.vectorGrid.protobuf( 'https://opendrr.github.io/tile-cache/dsra_acm7p0_georgiastraitfault_indicators_s/EPSG_900913/{z}/{x}/{y}.pbf', vectorTileOptions ).addTo( map );
 
         vectorTileLayer.on( 'click', function ( e ) {
 
